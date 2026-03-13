@@ -14,13 +14,26 @@
     box-sizing: border-box;
   }
 
-  body {
+  html, body {
     margin: 0;
+    /* Prevent any element from causing horizontal scroll */
+    overflow-x: hidden;
+    /* Snap to viewport — prevents rubber-banding on fixed-layout pages */
+    overscroll-behavior: none;
+  }
+
+  body {
     background-color: #0a0a0a;
     color: #f5f0e8;
   }
 
   #root {
     min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  /* Remove 300ms tap delay on all interactive elements without disabling zoom */
+  button, a, [role="button"] {
+    touch-action: manipulation;
   }
 }

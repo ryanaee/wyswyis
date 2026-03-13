@@ -32,9 +32,17 @@ export default function Camera() {
     }
   }, [activeFilter, isCapturing, navigate])
 
+  // Prevent the 300ms tap delay on mobile; also stops the synthetic click
+  // that iOS fires after touchend so the handler doesn't fire twice.
+  const handleShutterTouch = useCallback((e) => {
+    e.preventDefault()
+    handleShutter()
+  }, [handleShutter])
+
   return (
     <main className="fixed inset-0 bg-[#0a0a0a] flex flex-col overflow-hidden">
-      {/* ── Camera viewport ──────────────────────────────────────────────── */}
+
+      {/* ── Camera viewport — fills all space above the controls bar ─────── */}
       <div className="flex-1 relative overflow-hidden">
         <CameraView
           ref={cameraRef}
@@ -42,54 +50,69 @@ export default function Camera() {
           matrix={FILTERS[activeFilter]?.matrix ?? null}
         />
 
-        {/* Filter badge — top left */}
-        <div className="absolute top-4 left-4 z-10 pointer-events-none">
+        {/* Filter badge — top left, inside safe area */}
+        <div
+          className="absolute z-10 pointer-events-none"
+          style={{ top: 'max(1rem, env(safe-area-inset-top, 1rem))', left: '1rem' }}
+        >
           <span className="font-mono text-[11px] text-white bg-black/50 px-2.5 py-1 rounded-full tracking-wide">
             {FILTERS[activeFilter]?.label}
           </span>
         </div>
 
-        {/* Flip button — top right */}
+        {/* Flip button — top right, 44×44 tap target, inside safe area */}
         <button
           onClick={handleFlip}
           aria-label="Flip camera"
-          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white active:bg-black/70 transition-colors"
+          className="absolute z-10 flex items-center justify-center rounded-full bg-black/50 text-white active:bg-black/70 transition-colors"
+          style={{
+            top: 'max(1rem, env(safe-area-inset-top, 1rem))',
+            right: '1rem',
+            width: 44,
+            height: 44,
+          }}
         >
           <FlipIcon />
         </button>
       </div>
 
-      {/* ── Bottom controls ──────────────────────────────────────────────── */}
-      <div className="shrink-0 bg-[#0a0a0a] pt-4 pb-10 px-4">
-        {/* Horizontally scrollable filter pills */}
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-5">
+      {/* ── Bottom controls — padded past home indicator on iPhone ────────── */}
+      <div
+        className="shrink-0 bg-[#0a0a0a] pt-4 px-4"
+        style={{ paddingBottom: 'max(2.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem))' }}
+      >
+        {/* Horizontally scrollable filter pills — min 44px tap height */}
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-4">
           {Object.entries(FILTERS).map(([key, { label }]) => (
             <button
               key={key}
               onClick={() => setActiveFilter(key)}
               className={[
-                'shrink-0 px-4 py-1.5 rounded-full font-mono text-xs text-white bg-white/10 border transition-colors',
+                'shrink-0 px-4 rounded-full font-mono text-xs text-white bg-white/10 border transition-colors',
+                'flex items-center', // vertical centering
                 activeFilter === key ? 'border-white' : 'border-transparent',
               ].join(' ')}
+              style={{ minHeight: 44 }}
             >
               {label}
             </button>
           ))}
         </div>
 
-        {/* Shutter button */}
-        <div className="flex justify-center">
+        {/* Shutter — 64px, centred, 44px+ touch area satisfied */}
+        <div className="flex justify-center pb-2">
           <button
             onClick={handleShutter}
+            onTouchEnd={handleShutterTouch}
             disabled={isCapturing}
             aria-label="Capture photo"
             className="w-16 h-16 rounded-full bg-white flex items-center justify-center disabled:opacity-50 active:scale-95 transition-transform"
           >
-            {/* Inner ring detail */}
             <div className="w-[54px] h-[54px] rounded-full border-2 border-black/15" />
           </button>
         </div>
       </div>
+
     </main>
   )
 }
