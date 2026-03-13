@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { applyColorMatrixToCanvas } from '../utils/imageCapture'
+import { applyColorMatrix } from '../utils/colorMatrix'
 
 export default function CameraView({ filter = 'normal', matrix }) {
   const videoRef = useRef(null)
@@ -44,7 +44,7 @@ export default function CameraView({ filter = 'normal', matrix }) {
         canvas.height = video.videoHeight || canvas.offsetHeight
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
         if (matrix) {
-          applyColorMatrixToCanvas(canvas, ctx, matrix)
+          applyColorMatrix(ctx, canvas.width, canvas.height, matrix)
         }
       }
       animFrameRef.current = requestAnimationFrame(drawFrame)
@@ -72,7 +72,7 @@ export default function CameraView({ filter = 'normal', matrix }) {
         ref={canvasRef}
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {filter !== 'normal' && (
+      {filter && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-cream font-mono text-xs px-3 py-1 rounded-full">
           {filter}
         </div>

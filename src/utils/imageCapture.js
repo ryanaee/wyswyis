@@ -1,4 +1,4 @@
-import { applyMatrixToImageData } from './colorMatrix'
+import { applyColorMatrix } from './colorMatrix'
 
 /**
  * Capture the current frame from a <video> element and draw it onto a <canvas>,
@@ -17,23 +17,10 @@ export function captureFrameToCanvas(video, canvas, matrix = null) {
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
   if (matrix) {
-    applyColorMatrixToCanvas(canvas, ctx, matrix)
+    applyColorMatrix(ctx, canvas.width, canvas.height, matrix)
   }
 
   return ctx
-}
-
-/**
- * Apply a color matrix to all pixels on an existing canvas.
- *
- * @param {HTMLCanvasElement} canvas
- * @param {CanvasRenderingContext2D} ctx
- * @param {number[]} matrix - 20-element flat array
- */
-export function applyColorMatrixToCanvas(canvas, ctx, matrix) {
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  applyMatrixToImageData(imageData, matrix)
-  ctx.putImageData(imageData, 0, 0)
 }
 
 /**

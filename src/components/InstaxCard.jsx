@@ -1,7 +1,7 @@
-import { COLOR_FILTERS } from '../utils/colorMatrix'
+import { FILTERS } from '../utils/colorMatrix'
 
 export default function InstaxCard({ imageDataUrl, filter = 'normal' }) {
-  const filterLabel = COLOR_FILTERS[filter]?.label ?? filter
+  const filterLabel = FILTERS[filter]?.label ?? filter
 
   return (
     <div className="bg-cream p-3 pb-10 shadow-xl rotate-1 hover:rotate-0 transition-transform duration-200 max-w-xs w-full">

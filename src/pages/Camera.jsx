@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom'
 import CameraView from '../components/CameraView'
 import FilterPill from '../components/FilterPill'
 import ToggleSwitch from '../components/ToggleSwitch'
-import { COLOR_FILTERS } from '../utils/colorMatrix'
+import { FILTERS } from '../utils/colorMatrix'
 import { useState } from 'react'
 
 export default function Camera() {
-  const [activeFilter, setActiveFilter] = useState('normal')
+  const [activeFilter, setActiveFilter] = useState('deuteranomaly')
   const [filterEnabled, setFilterEnabled] = useState(true)
 
   return (
@@ -24,8 +24,8 @@ export default function Camera() {
 
       <div className="flex-1 relative">
         <CameraView
-          filter={filterEnabled ? activeFilter : 'normal'}
-          matrix={COLOR_FILTERS[activeFilter]?.matrix}
+          filter={filterEnabled ? activeFilter : null}
+          matrix={FILTERS[activeFilter]?.matrix}
         />
       </div>
 
@@ -34,7 +34,7 @@ export default function Camera() {
           Color Blindness Type
         </p>
         <div className="flex flex-wrap gap-2 mb-6">
-          {Object.entries(COLOR_FILTERS).map(([key, { label }]) => (
+          {Object.entries(FILTERS).map(([key, { label }]) => (
             <FilterPill
               key={key}
               label={label}
