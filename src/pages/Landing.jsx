@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { FILTERS } from '../utils/colorMatrix'
 
+const FORM_URL = import.meta.env.VITE_GOOGLE_FORM_URL ?? '#feedback-form'
+
 // Per-filter dot colors for the types preview row
 const FILTER_DOTS = {
   deuteranomaly: '#4caf50',
@@ -32,7 +34,7 @@ export default function Landing() {
               Gallery
             </Link>
             <a
-              href="#feedback-form"
+              href={FORM_URL}
               className="font-mono text-xs uppercase tracking-widest hover:text-red transition-colors"
             >
               Feedback
@@ -217,7 +219,7 @@ export default function Landing() {
 
       {/* ── Floating feedback button ─────────────────────────────────────── */}
       <a
-        href="#feedback-form"
+        href={FORM_URL}
         className="fixed bottom-5 right-5 z-50 bg-cream text-black font-mono text-xs px-4 py-2 rounded-full shadow-lg border border-black/10 hover:bg-yellow transition-colors"
       >
         Feedback

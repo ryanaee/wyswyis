@@ -4,6 +4,8 @@ import InstaxCard from '../components/InstaxCard'
 import { FILTERS } from '../utils/colorMatrix'
 import { getLocationStringCached } from '../utils/geolocation'
 
+const FORM_URL = import.meta.env.VITE_GOOGLE_FORM_URL ?? '#gallery-form'
+
 // Pixel dimensions for the saved JPEG (360px card @ 2×)
 const SAVE_SCALE = 2
 const CARD_W = 360 * SAVE_SCALE   // 720
@@ -162,7 +164,7 @@ export default function Result() {
           </button>
 
           <a
-            href="#gallery-form"
+            href={FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full bg-[#0a0a0a] text-white font-mono text-sm py-2.5 rounded text-center hover:bg-black/80 transition-colors"
